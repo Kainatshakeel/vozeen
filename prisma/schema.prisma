@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  passwordHash String
+  role String @default("CUSTOMER")
+  createdAt DateTime @default(now())
+  orders Order[]
+  addresses Address[]
+  wishlist Wishlist[]
+}
+model Product {
+  id String @id @default(cuid())
+  slug String @unique
+  name String
+  description String
+  category String
+  price Int
+  compareAt Int?
+  images String[]
+  featured Boolean @default(false)
+  active Boolean @default(true)
+  fabric String?
+  pieceType String?
+  work String?
+  fit String?
+  sizeChart String?
+  pieces Json @default("[]")
+  createdAt DateTime @default(now())
+  variants Variant[]
+  wishlist Wishlist[]
+}
+model Variant {
+  id String @id @default(cuid())
+  productId String
+  product Product @relation(fields:[productId], references:[id])
+  size String
+  color String
+  stock Int @default(0)
+  items OrderItem[]
+  @@unique([productId,size,color])
+}
+model Order {
+  id String @id @default(cuid())
+  userId String?
+  user User? @relation(fields:[userId], references:[id])
+  email String
+  shipping Json
+  subtotal Int
+  discount Int @default(0)
+  shippingFee Int
+  total Int
+  status String @default("PENDING")
+  paymentStatus String @default("UNPAID")
+  paymentMethod String
+  paymentReference String? @unique
+  trackingToken String @unique
+  idempotencyKey String @unique
+  couponCode String?
+  confirmationSentAt DateTime?
+  createdAt DateTime @default(now())
+  items OrderItem[]
+}
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields:[orderId], references:[id])
+  variantId String
+  variant Variant @relation(fields:[variantId], references:[id])
+  name String
+  image String
+  size String
+  color String
+  price Int
+  quantity Int
+}
+model Coupon {
+  code String @id
+  percent Int
+  minimum Int @default(0)
+  maxUses Int @default(100)
+  uses Int @default(0)
+  expiresAt DateTime
+  active Boolean @default(true)
+}
+model Address {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  name String
+  phone String
+  line1 String
+  city String
+  postalCode String
+}
+model Wishlist {
+  userId String
+  productId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  product Product @relation(fields:[productId], references:[id], onDelete:Cascade)
+  @@id([userId,productId])
+}
+model RateLimit {
+  key String @id
+  count Int
+  resetAt DateTime
+}
