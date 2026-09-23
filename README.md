@@ -1,6 +1,6 @@
-# Vozeen — Everyday, elevated.
+# Vozeen — Eastern wear, elevated.
 
-A responsive Next.js App Router clothing storefront with Tailwind CSS, PostgreSQL/Prisma, NextAuth credentials authentication, and a protected admin panel.
+A responsive Next.js App Router storefront for Pakistani Eastern wear with Tailwind CSS, PostgreSQL/Prisma, NextAuth credentials authentication, and a protected admin panel.
 
 ## Structure
 
@@ -28,7 +28,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. Without `DATABASE_URL`, eight sample products render from a local catalog. Filters, size selection and the persistent bag work. Accounts and order placement require PostgreSQL and do not pretend to succeed in preview.
+Open http://localhost:3000. Without `DATABASE_URL`, eighteen sample products render from a local catalog. Filters, size selection and the persistent bag work. Accounts and order placement require PostgreSQL and do not pretend to succeed in preview.
 
 ## Enable the full application
 
@@ -54,7 +54,7 @@ Use versioned Prisma migrations for production (`prisma migrate dev` during deve
 - Persistent cart, server-priced checkout, COD, coupon validation, private tracking and account order history.
 - Saved addresses, persistent wishlists, bcrypt passwords, JWT sessions, database role checks, same-origin mutations and persistent rate limits.
 - Transactional stock reservations, integer-paisa totals, serializable transaction retries, checkout idempotency and signed callbacks.
-- Admin product creation/editing/archiving with image URLs and variant stock; fulfilment statuses; cancellation/restocking; sales charts; customers and editable coupons.
+- Admin product creation/editing/archiving with photo uploads, piece/fabric details, size-chart selection and variant stock; fulfilment statuses; cancellation/restocking; sales charts; customers and editable coupons.
 - Responsive pages, optimized lazy images, metadata/JSON-LD, sitemap/robots and configurable WhatsApp support.
 
 ## Payments
