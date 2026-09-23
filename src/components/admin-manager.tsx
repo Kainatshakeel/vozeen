@@ -1,7 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ImagePlus,
+  Pencil,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
 import { formatMoney } from "./product-card";
 import { transitions } from "@/lib/admin";
 type AdminProduct = {
@@ -32,6 +40,125 @@ async function mutate(resource: string, method: string, body: unknown) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.error);
   return data;
+}
+// Photos for a product: upload files or paste URLs. The first photo is the
+// main image. Values are submitted through the hidden "images" field.
+function ImageField({ initial }: { initial: string[] }) {
+  const [images, setImages] = useState(initial);
+  const [pasted, setPasted] = useState("");
+  const [status, setStatus] = useState("");
+  const [uploading, setUploading] = useState(false);
+  async function upload(files: FileList | null) {
+    if (!files?.length) return;
+    setUploading(true);
+    setStatus("");
+    try {
+      const body = new FormData();
+      for (const file of Array.from(files)) body.append("files", file);
+      const response = await fetch("/api/admin/uploads", {
+        method: "POST",
+        body,
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      setImages((prev) => [...prev, ...data.urls]);
+      setStatus(`${data.urls.length} photo(s) uploaded.`);
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
+  const move = (from: number, to: number) =>
+    setImages((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  return (
+    <div className="full image-field">
+      <span className="image-field-label">
+        Photos (first is the main image)
+      </span>
+      <input type="hidden" name="images" value={images.join("\n")} />
+      {images.length > 0 && (
+        <ul className="image-field-list">
+          {images.map((src, i) => (
+            <li key={`${src}-${i}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt={`Product photo ${i + 1}`} />
+              <div>
+                <button
+                  type="button"
+                  aria-label="Move photo left"
+                  disabled={i === 0}
+                  onClick={() => move(i, i - 1)}
+                >
+                  <ArrowLeft size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Move photo right"
+                  disabled={i === images.length - 1}
+                  onClick={() => move(i, i + 1)}
+                >
+                  <ArrowRight size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Remove photo"
+                  onClick={() =>
+                    setImages((prev) => prev.filter((_, j) => j !== i))
+                  }
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="image-field-actions">
+        <label className="button button-outline">
+          <ImagePlus size={16} />
+          {uploading ? "Uploading…" : "Upload photos"}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            hidden
+            disabled={uploading}
+            onChange={(e) => {
+              upload(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        <input
+          aria-label="Paste an image URL"
+          placeholder="…or paste an image URL"
+          value={pasted}
+          onChange={(e) => setPasted(e.target.value)}
+        />
+        <button
+          type="button"
+          className="button button-outline"
+          disabled={!pasted.trim()}
+          onClick={() => {
+            setImages((prev) => [...prev, pasted.trim()]);
+            setPasted("");
+          }}
+        >
+          Add
+        </button>
+      </div>
+      <p className="small-note">
+        JPEG, PNG or WebP, up to 5 MB each. Portrait photos (3:4) look best.
+        {status && ` ${status}`}
+      </p>
+    </div>
+  );
 }
 export function ProductManager({ products }: { products: AdminProduct[] }) {
   const router = useRouter();
@@ -239,16 +366,7 @@ export function ProductManager({ products }: { products: AdminProduct[] }) {
               required
             />
           </label>
-          <label>
-            Image URLs (one per line)
-            <textarea
-              name="images"
-              rows={5}
-              defaultValue={editing?.images.join("\n")}
-              placeholder="https://images.unsplash.com/…"
-              required
-            />
-          </label>
+          <ImageField initial={editing?.images || []} />
           <label>
             Variants: size, color, stock (one per line)
             <textarea

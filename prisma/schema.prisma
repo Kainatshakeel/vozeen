@@ -107,6 +107,13 @@ model Wishlist {
   product Product @relation(fields:[productId], references:[id], onDelete:Cascade)
   @@id([userId,productId])
 }
+model Upload {
+  id String @id @default(cuid())
+  data Bytes
+  contentType String
+  size Int
+  createdAt DateTime @default(now())
+}
 model RateLimit {
   key String @id
   count Int

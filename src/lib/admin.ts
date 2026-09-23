@@ -1,8 +1,20 @@
 import { z } from "zod";
-const image = z.url().refine((value) => {
-  const url = new URL(value);
-  return url.protocol === "https:" && url.hostname === "images.unsplash.com";
-}, "Use an HTTPS images.unsplash.com URL, or extend the image allowlist.");
+import { UPLOAD_PATH } from "./uploads";
+// Uploaded photos (/api/images/<id>) or HTTPS images.unsplash.com URLs.
+const image = z
+  .string()
+  .trim()
+  .refine((value) => {
+    if (UPLOAD_PATH.test(value)) return true;
+    try {
+      const url = new URL(value);
+      return (
+        url.protocol === "https:" && url.hostname === "images.unsplash.com"
+      );
+    } catch {
+      return false;
+    }
+  }, "Upload a photo, or use an HTTPS images.unsplash.com URL.");
 export const productSchema = z
   .object({
     name: z.string().trim().min(2).max(150),

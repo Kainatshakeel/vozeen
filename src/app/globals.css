@@ -2046,6 +2046,65 @@ a.small-note {
 .admin-product-form .full {
   grid-column: 1/-1;
 }
+.image-field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.image-field-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.image-field-list li {
+  width: 110px;
+  border: 1px solid var(--line);
+}
+.image-field-list li:first-child {
+  border-color: var(--ink);
+}
+.image-field-list img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 0.75;
+  object-fit: cover;
+  background: var(--surface);
+}
+.image-field-list li > div {
+  display: flex;
+}
+.image-field-list button {
+  flex: 1;
+  height: 34px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  display: grid;
+  place-items: center;
+}
+.image-field-list button:hover:not(:disabled) {
+  background: var(--surface);
+}
+.image-field-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+.image-field-actions > input {
+  flex: 1;
+  min-width: 200px;
+}
+.image-field-actions label.button {
+  cursor: pointer;
+  letter-spacing: var(--track-wide);
+}
 .loading {
   min-height: 50vh;
   display: grid;

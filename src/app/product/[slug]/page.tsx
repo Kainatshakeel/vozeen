@@ -55,7 +55,13 @@ export default async function ProductPage({
             "@type": "Product",
             name: p.name,
             description: p.description,
-            image: p.images,
+            image: p.images.map(
+              (src) =>
+                new URL(
+                  src,
+                  process.env.NEXT_PUBLIC_SITE_URL || "https://vozeen.com",
+                ).href,
+            ),
             offers: {
               "@type": "Offer",
               priceCurrency: "PKR",

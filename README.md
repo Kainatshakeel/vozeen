@@ -75,7 +75,7 @@ Unit tests cover amount arithmetic, shipping thresholds, input validation, signe
 
 - Deploy behind HTTPS; set auth/site URLs to `https://vozeen.com` and configure DNS/TLS at your host. Keep secrets out of source control.
 - Replace all sample product copy, measurements, prices, stock and Unsplash editorial placeholders with approved brand data. Confirm policies, dispatch estimates, email and hours with the owner.
-- Images accept `images.unsplash.com`. Add an approved storage/CDN hostname in `next.config.ts` and `src/lib/admin.ts` for real inventory. Admin currently manages URLs, not file uploads.
+- Product photos: upload JPEG/PNG/WebP files (5 MB max) in the admin product form. They are stored in PostgreSQL and served from `/api/images/<id>` with long-lived caching. `images.unsplash.com` URLs are also accepted. For a large catalogue, move photos to object storage/CDN and add its hostname in `next.config.ts` and `src/lib/admin.ts`.
 - Test success, failure, cancellation, duplicate and delayed payments. Pending orders need reconciliation; refunds are handled in the provider portal.
 - Order confirmation emails are sent over SMTP when `SMTP_HOST`, `SMTP_USER` and `SMTP_PASS` are set (see `.env.example`); each order is emailed once, after checkout responds, and a delivery failure never blocks the order.
 - Status-update emails, password recovery, email verification, courier API integration, automated refunds and stock-expiry jobs are not implemented. Contact uses `mailto:`; tracking follows administrator-maintained fulfilment status.
