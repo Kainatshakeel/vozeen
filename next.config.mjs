@@ -1,6 +1,10 @@
-import type { NextConfig } from "next";
-const config: NextConfig = {
+// Plain JavaScript config: hosts without native SWC bindings (older glibc)
+// cannot compile a TypeScript config.
+/** @type {import('next').NextConfig} */
+const config = {
   images: {
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.ts",
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },
   async headers() {
