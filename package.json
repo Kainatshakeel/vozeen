@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "prisma generate \u0026\u0026 next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
@@ -42,6 +42,6 @@
     "nodemailer": "$nodemailer"
   },
   "engines": {
-    "node": "\u003e=20.9.0"
+    "node": ">=20.9.0"
   }
 }
