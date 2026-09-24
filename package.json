@@ -22,23 +22,26 @@
     "nodemailer": "^10.0.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "zod": "^4.1.0"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.63.0",
+    "zod": "^4.1.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22.0.0",
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "prettier": "^3.9.9",
     "prisma": "^6.19.0",
     "tailwindcss": "^4.1.0",
-    "tsx": "^4.20.0",
     "typescript": "^5.9.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.20.0"
   },
   "overrides": {
     "deepmerge-ts": "^8.0.0",
     "nodemailer": "$nodemailer"
+  },
+  "engines": {
+    "node": "\u003e=20.9.0"
   }
 }
