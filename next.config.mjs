@@ -7,6 +7,18 @@ const config = {
     loaderFile: "./src/lib/image-loader.ts",
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },
+  // Login and checkout only accept the canonical origin (NEXTAUTH_URL), so
+  // send www visitors to the bare domain.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.vozeen.com" }],
+        destination: "https://vozeen.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
