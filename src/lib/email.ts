@@ -77,6 +77,7 @@ export async function sendOrderConfirmation(orderId: string) {
   const address = [
     ship.name,
     ship.line1,
+    ...(ship.line2 ? [ship.line2] : []),
     `${ship.city} ${ship.postalCode}`,
     ship.phone,
   ];

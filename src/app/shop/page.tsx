@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getProducts } from "@/lib/catalog";
 import { Catalog } from "@/components/catalog";
 export const dynamic = "force-dynamic";
@@ -9,12 +10,13 @@ export default async function Shop({
 }) {
   const params = await searchParams;
   return (
-    <div className="container">
-      <div className="page-heading">
-        <div className="breadcrumb">Home / The collection</div>
-        <div className="eyebrow muted">EASTERN WEAR</div>
+    <div className="shop-page">
+      <div className="shop-heading">
+        <div className="breadcrumb">
+          <Link href="/">Home</Link> / <Link href="/shop">Shop</Link>
+          {params.category && <> / {params.category}</>}
+        </div>
         <h1>{params.category || "The collection"}</h1>
-        <p>Lawn, chikankari, kurta shalwar and formals, crafted in Pakistan.</p>
       </div>
       <Catalog
         key={JSON.stringify(params)}

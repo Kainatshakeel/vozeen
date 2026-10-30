@@ -8,9 +8,19 @@ export const addressSchema = z.object({
   city: z.string().trim().min(2).max(80),
   postalCode: z.string().regex(/^\d{5}$/, "Enter a five-digit postal code"),
 });
+// Optional checkout extras are stored with the order's shipping JSON.
+export const checkoutShippingSchema = addressSchema.extend({
+  line2: z.string().trim().max(150).optional(),
+  altPhone: z
+    .string()
+    .trim()
+    .regex(/^((\+92|0)3\d{9})?$/, "Enter a Pakistani mobile number")
+    .optional(),
+  notes: z.string().trim().max(300).optional(),
+});
 export const checkoutSchema = z.object({
   email: z.email(),
-  shipping: addressSchema,
+  shipping: checkoutShippingSchema,
   items: z
     .array(
       z.object({

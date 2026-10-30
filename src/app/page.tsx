@@ -10,39 +10,46 @@ import {
 } from "lucide-react";
 import { editorial, getProducts } from "@/lib/catalog";
 import { ProductCard } from "@/components/product-card";
+import { HeroSlides } from "@/components/hero-slides";
+import { ProductCarousel } from "@/components/product-carousel";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const products = await getProducts();
   const formals = products.filter((p) => p.category === "Formals");
-  const men = products.filter((p) => p.category === "Men");
-  const arrivals = [
-    ...products.filter((p) => p.category === "Women").slice(0, 4),
-    ...men.slice(0, 4),
-  ];
+  const women = products.filter((p) => p.category === "Women");
+  const sale = products.filter((p) => p.compareAt);
+  const bestsellers = products.filter((p) => p.featured).slice(0, 8);
   return (
     <>
       <section className="hero">
-        <div className="hero-media">
-          {editorial.heroPanels.map((src, i) => (
-            <div className="hero-panel" key={src}>
-              <Image
-                src={src}
-                alt={
-                  [
-                    "A crimson chikankari suit with matching dupatta",
-                    "A lemon organza three-piece beneath a floral arch",
-                    "A lilac embroidered suit with a printed dupatta",
-                  ][i]
-                }
-                fill
-                priority={i < 2}
-                sizes="(max-width: 860px) 100vw, 34vw"
-                className="hero-image"
-              />
-            </div>
-          ))}
-          <div className="hero-shade" />
-        </div>
+        <HeroSlides
+          panels={[
+            [
+              {
+                src: editorial.heroPanels[0],
+                alt: "A crimson chikankari suit with matching dupatta",
+              },
+              { src: editorial.formals, alt: "A festive formal outfit" },
+            ],
+            [
+              {
+                src: editorial.heroPanels[1],
+                alt: "A lemon organza three-piece beneath a floral arch",
+              },
+              { src: editorial.story, alt: "Hand embroidery close-up" },
+            ],
+            [
+              {
+                src: editorial.heroPanels[2],
+                alt: "A lilac embroidered suit with a printed dupatta",
+              },
+              {
+                src: women[1]?.images[0] ?? editorial.formals,
+                alt: "An embroidered Vozeen suit",
+              },
+            ],
+          ]}
+        />
         <div className="hero-copy">
           <div className="eyebrow">The festive edit — 2026</div>
           <h1>Heritage, reimagined</h1>
@@ -53,9 +60,6 @@ export default async function Home() {
           <div className="hero-actions">
             <Link className="button button-cream" href="/shop?category=Women">
               Shop women
-            </Link>
-            <Link className="button button-ghost" href="/shop?category=Men">
-              Shop men
             </Link>
             <Link className="button button-ghost" href="/shop?category=Formals">
               Formals
@@ -89,6 +93,43 @@ export default async function Home() {
           </span>
         </div>
       </section>
+      <section className="container categories-section top">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow muted">Categories</p>
+            <h2>Shop by occasion</h2>
+          </div>
+          <span className="section-caption">
+            From everyday lawn to bridal couture.
+          </span>
+        </div>
+        <div className="category-grid four">
+          {[
+            ["Women", "Lawn, chikankari & pret", editorial.women, ""],
+            ["Formals", "Bridal, festive & wedding wear", editorial.formals, ""],
+            ["Men", "Kurta shalwar & kameez", editorial.men, "soon"],
+            ["Kids", "Little ones, big occasions", editorial.story, "soon"],
+          ].map(([name, caption, src, soon]) => (
+            <Link
+              className={soon ? "category-card is-soon" : "category-card"}
+              href={soon ? `/${name.toLowerCase()}` : `/shop?category=${name}`}
+              key={name}
+            >
+              {soon && <span className="soon-badge">Coming soon</span>}
+              <Image
+                src={src}
+                alt={`${name} collection`}
+                fill
+                sizes="(max-width: 650px) 100vw, 33vw"
+              />
+              <div>
+                <p>{caption}</p>
+                <h3>{name}</h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
       <section className="container section" id="new-arrivals">
         <div className="section-heading">
           <div>
@@ -99,54 +140,95 @@ export default async function Home() {
             Shop new arrivals <ArrowUpRight size={17} />
           </Link>
         </div>
-        <div className="product-grid">
-          {arrivals.map((p, i) => (
-            <ProductCard product={p} index={i} key={p.id} />
-          ))}
-        </div>
+        <ProductCarousel
+          groups={[
+            { label: "All", products: products.slice(0, 10) },
+            { label: "Women", products: women.slice(0, 10) },
+            { label: "Formals", products: formals.slice(0, 10) },
+          ].filter((g) => g.products.length > 0)}
+        />
         <div className="collection-footnote">
           <span>Every stitch, considered.</span>
           <span>Designed and crafted in Pakistan.</span>
         </div>
       </section>
-      <section className="container categories-section">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow muted">Categories</p>
-            <h2>Shop by occasion</h2>
-          </div>
-          <span className="section-caption">
-            From everyday lawn to bridal couture.
-          </span>
-        </div>
-        <div className="category-grid">
-          {[
-            ["Women", "Lawn, chikankari & pret", editorial.women],
-            ["Men", "Kurta shalwar & kameez", editorial.men],
-            ["Formals", "Bridal, festive & wedding wear", editorial.formals],
-          ].map(([name, caption, src]) => (
-            <Link
-              className="category-card"
-              href={`/shop?category=${name}`}
-              key={name}
-            >
-              <Image
-                src={src}
-                alt={`${name} collection`}
-                fill
-                sizes="(max-width: 650px) 100vw, 33vw"
-              />
-              <div>
-                <p>{caption}</p>
-                <h3>
-                  {name}
-                  <ArrowUpRight size={25} />
-                </h3>
-              </div>
-            </Link>
-          ))}
+      <section className="video-feature">
+        <Image
+          className="video-feature-bg"
+          src={editorial.story}
+          alt=""
+          fill
+          sizes="100vw"
+        />
+        <div className="video-feature-shade" />
+        <div className="video-feature-copy">
+          <p className="eyebrow">The festive edit</p>
+          <h2>Dressed for every celebration</h2>
+          <p>
+            Embroidered organza, chikankari and luxe formals for mehndi nights,
+            nikah days and everything in between.
+          </p>
+          <Link className="button button-cream" href="/shop?category=Formals">
+            Explore the edit
+          </Link>
         </div>
       </section>
+      <section className="duo">
+        {[
+          ["Women", "Lawn, pret & chikankari", editorial.women],
+          ["Formals", "Bridal, festive & wedding wear", editorial.formals],
+        ].map(([name, caption, src]) => (
+          <Link className="duo-card" href={`/shop?category=${name}`} key={name}>
+            <Image
+              src={src}
+              alt={`${name} collection`}
+              fill
+              sizes="(max-width: 700px) 100vw, 50vw"
+            />
+            <div>
+              <p>{caption}</p>
+              <h3>{name}</h3>
+              <span>Shop now</span>
+            </div>
+          </Link>
+        ))}
+      </section>
+      {bestsellers.length > 0 && (
+        <section className="container section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow muted">Most loved</p>
+              <h2>Bestsellers</h2>
+            </div>
+            <Link className="text-link" href="/shop">
+              Shop all <ArrowUpRight size={17} />
+            </Link>
+          </div>
+          <ProductCarousel
+            groups={[{ label: "Bestsellers", products: bestsellers }]}
+          />
+        </section>
+      )}
+      {sale.length > 0 && (
+        <section className="sale-band">
+          <div className="container">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Limited time</p>
+                <h2>Sale</h2>
+              </div>
+              <Link className="text-link" href="/shop">
+                Shop the sale <ArrowUpRight size={17} />
+              </Link>
+            </div>
+            <div className="product-grid">
+              {sale.slice(0, 4).map((p, i) => (
+                <ProductCard product={p} index={i} key={p.id} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       <section className="story-section">
         <div className="story-image">
           <Image
@@ -201,7 +283,7 @@ export default async function Home() {
           Shop the collection <ArrowRight size={16} />
         </Link>
         <div className="community-images">
-          {[...men.slice(4), ...products.slice(4, 8)].slice(0, 4).map((p) => (
+          {products.slice(4, 8).slice(0, 4).map((p) => (
             <Link key={p.id} href={`/product/${p.slug}`}>
               <Image src={p.images[0]} alt={p.name} fill sizes="25vw" />
             </Link>

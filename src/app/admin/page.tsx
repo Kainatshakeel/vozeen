@@ -209,6 +209,9 @@ export default async function Admin({
                 const address = o.shipping as {
                   name: string;
                   line1: string;
+                  line2?: string;
+                  altPhone?: string;
+                  notes?: string;
                   city: string;
                   postalCode: string;
                   phone: string;
@@ -226,9 +229,18 @@ export default async function Admin({
                       <span className="small-note">
                         {address.name}
                         <br />
-                        {address.line1}, {address.city} {address.postalCode}
+                        {address.line1}
+                        {address.line2 && `, ${address.line2}`}, {address.city}{" "}
+                        {address.postalCode}
                         <br />
                         {address.phone}
+                        {address.altPhone && ` / ${address.altPhone}`}
+                        {address.notes && (
+                          <>
+                            <br />
+                            Note: {address.notes}
+                          </>
+                        )}
                       </span>
                     </td>
                     <td>

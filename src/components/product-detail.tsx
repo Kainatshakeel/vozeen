@@ -2,47 +2,53 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { Minus, Plus, Ruler, ShoppingBag, Truck, X } from "lucide-react";
+import {
+  Banknote,
+  Minus,
+  Plus,
+  RefreshCcw,
+  Ruler,
+  ShoppingBag,
+  Truck,
+  X,
+} from "lucide-react";
 import type { Product } from "@/lib/catalog";
 import { chartSetFor } from "@/lib/size-charts";
 import { SizeChart } from "./size-chart";
 import { useCart } from "./cart-provider";
 import { formatMoney } from "./product-card";
+import { ProductGallery } from "./product-gallery";
 export function ProductDetail({ product: p }: { product: Product }) {
-  const [image, setImage] = useState(0);
   const [size, setSize] = useState("");
   const [color, setColor] = useState(p.variants[0]?.color || "");
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const chartDialog = useRef<HTMLDialogElement>(null);
+  const sizeBlock = useRef<HTMLDivElement>(null);
   const subtitle = [p.pieceType, p.work, p.fabric].filter(Boolean).join(" · ");
   const { add, openDrawer } = useCart();
   const variant = p.variants.find((v) => v.size === size && v.color === color);
+  function addToBag() {
+    if (!variant) {
+      sizeBlock.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    add({
+      variantId: variant.id,
+      slug: p.slug,
+      name: p.name,
+      image: p.images[0],
+      size,
+      color,
+      price: p.price,
+      quantity: qty,
+    });
+    setAdded(true);
+    openDrawer();
+  }
   return (
     <div className="detail-layout">
-      <div>
-        <div className="gallery-main">
-          <Image
-            src={p.images[image]}
-            alt={`${p.name}, view ${image + 1}`}
-            fill
-            priority
-            sizes="(max-width: 650px) 100vw, 55vw"
-          />
-        </div>
-        <div className="gallery-thumbs">
-          {p.images.map((src, i) => (
-            <button
-              key={i}
-              aria-label={`Show image ${i + 1}`}
-              aria-pressed={image === i}
-              onClick={() => setImage(i)}
-            >
-              <Image src={src} alt={`${p.name} thumbnail`} fill sizes="70px" />
-            </button>
-          ))}
-        </div>
-      </div>
+      <ProductGallery images={p.images} name={p.name} />
       <div className="detail-info">
         <p className="eyebrow muted">
           {p.category === "Formals"
@@ -77,7 +83,7 @@ export function ProductDetail({ product: p }: { product: Product }) {
             ))}
           </div>
         </div>
-        <div className="detail-option">
+        <div className="detail-option" ref={sizeBlock}>
           <div>
             <span>Select a size {size && `— ${size}`}</span>
             <button
@@ -128,23 +134,8 @@ export function ProductDetail({ product: p }: { product: Product }) {
           </div>
           <button
             className="button"
-            disabled={!variant || variant.stock < qty}
-            onClick={() => {
-              if (variant) {
-                add({
-                  variantId: variant.id,
-                  slug: p.slug,
-                  name: p.name,
-                  image: p.images[0],
-                  size,
-                  color,
-                  price: p.price,
-                  quantity: qty,
-                });
-                setAdded(true);
-                openDrawer();
-              }
-            }}
+            disabled={!!variant && variant.stock < qty}
+            onClick={addToBag}
           >
             {added
               ? "Added to your bag"
@@ -163,6 +154,17 @@ export function ProductDetail({ product: p }: { product: Product }) {
           <Truck size={13} style={{ display: "inline", marginRight: 6 }} />
           Free shipping over Rs. 15,000 · Cash on delivery available
         </p>
+        <ul className="trust-row">
+          <li>
+            <Truck size={18} /> Delivery across Pakistan
+          </li>
+          <li>
+            <RefreshCcw size={18} /> 14-day exchange
+          </li>
+          <li>
+            <Banknote size={18} /> Cash on delivery
+          </li>
+        </ul>
         <details open>
           <summary>Details</summary>
           <div className="piece-list">
@@ -200,6 +202,21 @@ export function ProductDetail({ product: p }: { product: Product }) {
             within 14 days. <Link href="/returns">Read our policy →</Link>
           </p>
         </details>
+      </div>
+      <div className="sticky-buy">
+        <div>
+          <strong>{formatMoney(p.price)}</strong>
+          <span>{size ? `Size ${size}` : "Select a size"}</span>
+        </div>
+        <button
+          type="button"
+          className="button"
+          disabled={!!variant && variant.stock < qty}
+          onClick={addToBag}
+        >
+          {!size ? "Select size" : "Add to bag"}
+          <ShoppingBag size={16} />
+        </button>
       </div>
       <dialog
         ref={chartDialog}

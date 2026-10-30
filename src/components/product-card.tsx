@@ -103,15 +103,6 @@ export function ProductCard({
             sizes="(max-width: 650px) 50vw, (max-width: 1000px) 33vw, 25vw"
           />
         </Link>
-        <span className={`product-badge ${p.compareAt ? "sale" : ""}`}>
-          {p.compareAt
-            ? "SALE"
-            : p.category === "Formals"
-              ? "FORMAL"
-              : index % 3 === 0
-                ? "BESTSELLER"
-                : "NEW"}
-        </span>
         <button
           className={`wish-button ${saved ? "saved" : ""}`}
           onClick={save}
@@ -156,20 +147,24 @@ export function ProductCard({
         </div>
       </div>
       <div className="product-meta">
-        <p>
-          {[p.pieceType, p.fabric].filter(Boolean).join(" · ") || p.category}
-        </p>
         <Link href={`/product/${p.slug}`}>
           <h3>{p.name}</h3>
         </Link>
+        <p className="product-type">
+          <strong>{p.pieceType || p.category}</strong>
+          <span className={`product-tag ${p.compareAt ? "sale" : ""}`}>
+            {p.compareAt
+              ? "Sale"
+              : p.category === "Formals"
+                ? "Formal"
+                : index % 3 === 0
+                  ? "Bestseller"
+                  : "New in"}
+          </span>
+        </p>
         <div className="product-price">
-          {formatMoney(p.price)}{" "}
           {p.compareAt && <del>{formatMoney(p.compareAt)}</del>}
-        </div>
-        <div className="swatches">
-          {[...new Set(p.variants.map((v) => v.color))].map((c) => (
-            <i key={c} title={c} style={{ background: swatch(c) }} />
-          ))}
+          {formatMoney(p.price)}
         </div>
         {message && (
           <Link className="small-note" href="/login">

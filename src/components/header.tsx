@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  ArrowUpRight,
   Search,
   UserRound,
   ShoppingBag,
@@ -19,11 +18,6 @@ export function Header() {
   const [search, setSearch] = useState(false);
   return (
     <>
-      <div className="announcement">
-        The festive collection is here.{" "}
-        <span>Free shipping on orders over Rs. 15,000</span>
-        <ArrowUpRight size={13} />
-      </div>
       <header className="site-header">
         <div className="header-inner">
           <button
@@ -44,7 +38,8 @@ export function Header() {
               ["/", "Home"],
               ["/shop", "Shop all"],
               ["/shop?category=Women", "Women"],
-              ["/shop?category=Men", "Men"],
+              ["/men", "Men"],
+              ["/kids", "Kids"],
               ["/shop?sort=new", "New arrivals"],
               ["/about", "Our story"],
             ].map(([href, label]) => (
@@ -56,6 +51,9 @@ export function Header() {
               >
                 {label}
                 {label === "New arrivals" && <i />}
+                {(label === "Men" || label === "Kids") && (
+                  <small className="soon-tag">Soon</small>
+                )}
               </Link>
             ))}
           </nav>

@@ -81,6 +81,9 @@ export function CheckoutForm({
             line1: form.get("line1"),
             city: form.get("city"),
             postalCode: form.get("postalCode"),
+            line2: String(form.get("line2") || "").trim() || undefined,
+            altPhone: String(form.get("altPhone") || "").trim() || undefined,
+            notes: String(form.get("notes") || "").trim() || undefined,
           },
           items: items.map((i) => ({
             variantId: i.variantId,
@@ -130,7 +133,7 @@ export function CheckoutForm({
         <section className="checkout-section">
           <h2>01 — Your details</h2>
           <label>
-            Email address
+            Email address <span className="req">*</span>
             <input
               name="email"
               type="email"
@@ -172,7 +175,7 @@ export function CheckoutForm({
           )}
           <div className="form-grid" key={address?.id || "new"}>
             <label className="full">
-              Full name
+              Full name <span className="req">*</span>
               <input
                 name="name"
                 autoComplete="name"
@@ -182,7 +185,7 @@ export function CheckoutForm({
               />
             </label>
             <label>
-              Mobile number
+              Mobile number <span className="req">*</span>
               <input
                 name="phone"
                 type="tel"
@@ -194,11 +197,16 @@ export function CheckoutForm({
               />
             </label>
             <label>
-              Country
-              <input value="Pakistan" readOnly />
+              Alternate mobile number <span className="opt">(optional)</span>
+              <input
+                name="altPhone"
+                type="tel"
+                placeholder="03001234567"
+                pattern="((\+92|0)3[0-9]{9})?"
+              />
             </label>
             <label className="full">
-              Street address
+              Street address <span className="req">*</span>
               <input
                 name="line1"
                 placeholder="House, street, neighborhood"
@@ -208,8 +216,18 @@ export function CheckoutForm({
                 required
               />
             </label>
+            <label className="full">
+              Apartment, suite, landmark{" "}
+              <span className="opt">(optional)</span>
+              <input
+                name="line2"
+                placeholder="Flat no., building, nearby landmark"
+                autoComplete="address-line2"
+                maxLength={150}
+              />
+            </label>
             <label>
-              City
+              City <span className="req">*</span>
               <input
                 name="city"
                 autoComplete="address-level2"
@@ -218,7 +236,7 @@ export function CheckoutForm({
               />
             </label>
             <label>
-              Postal code
+              Postal code <span className="req">*</span>
               <input
                 name="postalCode"
                 inputMode="numeric"
@@ -228,7 +246,23 @@ export function CheckoutForm({
                 required
               />
             </label>
+            <label>
+              Country
+              <input value="Pakistan" readOnly />
+            </label>
+            <label className="full">
+              Order notes <span className="opt">(optional)</span>
+              <textarea
+                name="notes"
+                rows={3}
+                maxLength={300}
+                placeholder="Delivery instructions, gift message, preferred time…"
+              />
+            </label>
           </div>
+          <p className="small-note">
+            Fields marked <span className="req">*</span> are required.
+          </p>
         </section>
         <section className="checkout-section">
           <h2>03 — The finishing touch</h2>

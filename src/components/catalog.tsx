@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SlidersHorizontal, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Grid2x2, Grid3x3, LayoutGrid, X } from "lucide-react";
 import type { Product } from "@/lib/catalog";
 import { ProductCard, formatMoney } from "./product-card";
 const PER_PAGE = 12;
@@ -38,6 +38,7 @@ export function Catalog({
   const [sort, setSort] = useState(initialSort);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [cols, setCols] = useState<"large" | "mid" | "small">("mid");
   const router = useRouter();
   const active =
     [category, size, color, fabric, pieceType, work].filter(Boolean).length +
@@ -82,7 +83,67 @@ export function Catalog({
   }
   return (
     <>
+      {facet("pieceType").length > 0 && (
+        <nav className="subcategories" aria-label="Piece type">
+          {["", ...facet("pieceType")].map((t) => (
+            <button
+              key={t}
+              type="button"
+              className={pieceType === t ? "on" : ""}
+              onClick={() => {
+                setPieceType(t);
+                setPage(1);
+              }}
+            >
+              {t || "All"}
+            </button>
+          ))}
+        </nav>
+      )}
       <div className="catalog-toolbar">
+        <div className="view-toggle" role="group" aria-label="Grid size">
+          <button
+            type="button"
+            aria-label="Large grid"
+            aria-pressed={cols === "large"}
+            onClick={() => setCols("large")}
+          >
+            <Grid2x2 size={22} />
+          </button>
+          <button
+            type="button"
+            aria-label="Medium grid"
+            aria-pressed={cols === "mid"}
+            onClick={() => setCols("mid")}
+          >
+            <LayoutGrid size={22} />
+          </button>
+          <button
+            type="button"
+            aria-label="Compact grid"
+            aria-pressed={cols === "small"}
+            onClick={() => setCols("small")}
+          >
+            <Grid3x3 size={22} />
+          </button>
+        </div>
+        <p>
+          {filtered.length} {filtered.length === 1 ? "product" : "products"}{" "}
+          {query && `for “${query}”`}
+        </p>
+        <label className="sort-control">
+          <span>Sort by</span>
+          <select
+            value={sort}
+            aria-label="Sort by"
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="featured">Featured</option>
+            <option value="new">New arrivals</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+          </select>
+        </label>
         <button
           type="button"
           className="filter-toggle"
@@ -90,32 +151,35 @@ export function Catalog({
           aria-controls="catalog-filters"
           onClick={() => setShowFilters(!showFilters)}
         >
-          <SlidersHorizontal size={18} />
-          Filters{active > 0 && <span>{active}</span>}
+          Filter{active > 0 && <span>{active}</span>}
         </button>
-        <p>
-          {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}{" "}
-          {query && `for “${query}”`}
-        </p>
-        <label>
-          Sort by{" "}
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
-            <option value="featured">Featured</option>
-            <option value="new">New arrivals</option>
-            <option value="low">Price: low to high</option>
-            <option value="high">Price: high to low</option>
-          </select>
-        </label>
       </div>
-      <div className="catalog-layout">
+      <div className="catalog-layout" data-cols={cols}>
+        {showFilters && (
+          <div
+            className="filter-backdrop"
+            onClick={() => setShowFilters(false)}
+          />
+        )}
         <aside
           id="catalog-filters"
           className={showFilters ? "catalog-filters open" : "catalog-filters"}
           aria-label="Product filters"
         >
+          <div className="filter-head">
+            <h2>Filter</h2>
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Close filters"
+              onClick={() => setShowFilters(false)}
+            >
+              <X size={22} />
+            </button>
+          </div>
           <div className="filter-block">
             <h3>Category</h3>
-            {["", "Women", "Men", "Formals"].map((c) => (
+            {["", "Women", "Formals"].map((c) => (
               <label key={c}>
                 <input
                   type="checkbox"
@@ -197,6 +261,13 @@ export function Catalog({
           </div>
           <button type="button" className="reset-filters" onClick={reset}>
             Reset filters <ArrowUpRight size={16} />
+          </button>
+          <button
+            type="button"
+            className="button filter-apply"
+            onClick={() => setShowFilters(false)}
+          >
+            View {filtered.length} {filtered.length === 1 ? "product" : "products"}
           </button>
         </aside>
         <div>

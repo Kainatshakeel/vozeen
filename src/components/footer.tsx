@@ -23,7 +23,8 @@ export function Footer() {
             <h4>Explore</h4>
             <Link href="/shop">Shop all</Link>
             <Link href="/shop?category=Women">Women</Link>
-            <Link href="/shop?category=Men">Men</Link>
+            <Link href="/men">Men (coming soon)</Link>
+            <Link href="/kids">Kids (coming soon)</Link>
             <Link href="/about">Our story</Link>
           </div>
           <div>
@@ -50,13 +51,6 @@ export function Footer() {
         <div className="footer-bottom container">
           <span>© {new Date().getFullYear()} Vozeen. All rights reserved.</span>
           <span>Pakistan · PKR</span>
-          <div className="payment-marks">
-            <b>VISA</b>
-            <b>mastercard</b>
-            <b>JazzCash</b>
-            <b>easypaisa</b>
-            <span>COD</span>
-          </div>
         </div>
       </footer>
       {phone && (

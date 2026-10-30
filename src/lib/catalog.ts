@@ -484,7 +484,12 @@ export const demoProducts: Product[] = entries.map((e, i) => ({
     stock: e.category === "Formals" ? 3 : 12,
   })),
 }));
+// Ranges that are announced but not on sale yet; their products stay hidden.
+export const comingSoon = ["Men", "Kids"];
 export async function getProducts(): Promise<Product[]> {
+  return (await loadProducts()).filter((p) => !comingSoon.includes(p.category));
+}
+async function loadProducts(): Promise<Product[]> {
   if (!process.env.DATABASE_URL) return demoProducts;
   const products = await db.product.findMany({
     where: { active: true },
