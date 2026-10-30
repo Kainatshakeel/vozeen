@@ -8,6 +8,7 @@ import {
   AddressForm,
   DeleteAddress,
   Logout,
+  PasswordForm,
 } from "@/components/account-actions";
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -42,7 +43,7 @@ export default async function Account({
         <p>Your orders, addresses and wishlist.</p>
       </div>
       <nav className="account-tabs">
-        {["orders", "addresses", "wishlist"].map((t) => (
+        {["orders", "addresses", "wishlist", "password"].map((t) => (
           <Link
             key={t}
             href={`/account?tab=${t}`}
@@ -93,6 +94,11 @@ export default async function Account({
             </Link>
           </div>
         ))}
+      {tab === "password" && (
+        <div style={{ maxWidth: 520 }}>
+          <PasswordForm />
+        </div>
+      )}
       {tab === "addresses" && (
         <div className="checkout-layout">
           <AddressForm />

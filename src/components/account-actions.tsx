@@ -95,3 +95,78 @@ export function DeleteAddress({ id }: { id: string }) {
     </>
   );
 }
+export function PasswordForm() {
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  return (
+    <form
+      className="form-stack panel"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const data = new FormData(form);
+        if (data.get("next") !== data.get("confirm")) {
+          setMessage("The new passwords do not match.");
+          return;
+        }
+        setBusy(true);
+        try {
+          const res = await fetch("/api/account/password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              current: data.get("current"),
+              next: data.get("next"),
+            }),
+          });
+          const body = await res.json();
+          if (!res.ok) throw new Error(body.error);
+          form.reset();
+          setMessage("Your password has been changed.");
+        } catch (error) {
+          setMessage(
+            error instanceof Error ? error.message : "Unable to change it.",
+          );
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <h2>Change your password.</h2>
+      <label>
+        Current password <span className="req">*</span>
+        <input
+          name="current"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
+      </label>
+      <label>
+        New password <span className="req">*</span>
+        <input
+          name="next"
+          type="password"
+          autoComplete="new-password"
+          minLength={12}
+          required
+        />
+      </label>
+      <label>
+        Confirm new password <span className="req">*</span>
+        <input
+          name="confirm"
+          type="password"
+          autoComplete="new-password"
+          minLength={12}
+          required
+        />
+      </label>
+      <p className="small-note">Use at least 12 characters.</p>
+      <button className="button" disabled={busy}>
+        {busy ? "Saving…" : "Change password"}
+      </button>
+      {message && <p role="status">{message}</p>}
+    </form>
+  );
+}

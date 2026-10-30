@@ -8,7 +8,8 @@ import {
   Banknote,
   Sparkles,
 } from "lucide-react";
-import { editorial, getProducts } from "@/lib/catalog";
+import { getProducts } from "@/lib/catalog";
+import { homeImages } from "@/lib/home-images";
 import { ProductCard } from "@/components/product-card";
 import { HeroSlides } from "@/components/hero-slides";
 import { ProductCarousel } from "@/components/product-carousel";
@@ -26,25 +27,25 @@ export default async function Home() {
           panels={[
             [
               {
-                src: editorial.heroPanels[0],
+                src: homeImages.hero[0],
                 alt: "A crimson chikankari suit with matching dupatta",
               },
-              { src: editorial.formals, alt: "A festive formal outfit" },
+              { src: homeImages.heroSecond[0], alt: "A festive formal outfit" },
             ],
             [
               {
-                src: editorial.heroPanels[1],
+                src: homeImages.hero[1],
                 alt: "A lemon organza three-piece beneath a floral arch",
               },
-              { src: editorial.story, alt: "Hand embroidery close-up" },
+              { src: homeImages.heroSecond[1], alt: "Hand embroidery close-up" },
             ],
             [
               {
-                src: editorial.heroPanels[2],
+                src: homeImages.hero[2],
                 alt: "A lilac embroidered suit with a printed dupatta",
               },
               {
-                src: women[1]?.images[0] ?? editorial.formals,
+                src: homeImages.heroSecond[2],
                 alt: "An embroidered Vozeen suit",
               },
             ],
@@ -105,10 +106,10 @@ export default async function Home() {
         </div>
         <div className="category-grid four">
           {[
-            ["Women", "Lawn, chikankari & pret", editorial.women, ""],
-            ["Formals", "Bridal, festive & wedding wear", editorial.formals, ""],
-            ["Men", "Kurta shalwar & kameez", editorial.men, "soon"],
-            ["Kids", "Little ones, big occasions", editorial.story, "soon"],
+            ["Women", "Lawn, chikankari & pret", homeImages.categoryWomen, ""],
+            ["Formals", "Bridal, festive & wedding wear", homeImages.categoryFormals, ""],
+            ["Men", "Kurta shalwar & kameez", homeImages.categoryMen, "soon"],
+            ["Kids", "Little ones, big occasions", homeImages.categoryKids, "soon"],
           ].map(([name, caption, src, soon]) => (
             <Link
               className={soon ? "category-card is-soon" : "category-card"}
@@ -155,7 +156,7 @@ export default async function Home() {
       <section className="video-feature">
         <Image
           className="video-feature-bg"
-          src={editorial.story}
+          src={homeImages.banner}
           alt=""
           fill
           sizes="100vw"
@@ -175,8 +176,8 @@ export default async function Home() {
       </section>
       <section className="duo">
         {[
-          ["Women", "Lawn, pret & chikankari", editorial.women],
-          ["Formals", "Bridal, festive & wedding wear", editorial.formals],
+          ["Women", "Lawn, pret & chikankari", homeImages.categoryWomen],
+          ["Formals", "Bridal, festive & wedding wear", homeImages.categoryFormals],
         ].map(([name, caption, src]) => (
           <Link className="duo-card" href={`/shop?category=${name}`} key={name}>
             <Image
@@ -232,7 +233,7 @@ export default async function Home() {
       <section className="story-section">
         <div className="story-image">
           <Image
-            src={editorial.story}
+            src={homeImages.craft}
             alt="Close-up of colourful hand embroidery on fabric"
             fill
             sizes="(max-width: 700px) 100vw, 50vw"

@@ -62,6 +62,15 @@ export function AuthForm({ signup = false }: { signup?: boolean }) {
           required
         />
       </label>
+      {!signup && (
+        <Link
+          href="/forgot-password"
+          className="small-note"
+          style={{ textDecoration: "underline" }}
+        >
+          Forgot password?
+        </Link>
+      )}
       {signup && (
         <span className="small-note">
           Use at least 12 characters for your password.

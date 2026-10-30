@@ -148,3 +148,40 @@ ${rows.map(([label, value]) => `<tr><td style="${cell};padding-left:20px">${esca
     );
   }
 }
+
+export async function sendPasswordReset(to: string, link: string) {
+  if (!emailEnabled()) return false;
+  const text = [
+    "We received a request to reset your Vozeen password.",
+    "",
+    `Choose a new password: ${link}`,
+    "",
+    "This link works once and expires in 1 hour. If you did not ask for it, you can ignore this email.",
+    "Vozeen",
+  ].join("\n");
+  const html = `<!doctype html><html><body style="margin:0;background:#f6f3ee;font-family:Arial,Helvetica,sans-serif;color:#22231f">
+<div style="max-width:560px;margin:0 auto;padding:32px 20px">
+<p style="font-size:22px;font-weight:bold;letter-spacing:-.5px;margin:0 0 24px">vozeen</p>
+<h1 style="font-size:24px;font-weight:normal;margin:0 0 8px">Reset your password</h1>
+<p style="margin:0 0 24px;color:#5c5d57">We received a request to reset your Vozeen password.</p>
+<a href="${escape(link)}" style="display:inline-block;background:#22231f;color:#fff;text-decoration:none;padding:12px 20px">Choose a new password</a>
+<p style="font-size:12px;color:#8a8b84;margin-top:24px">This link works once and expires in 1 hour. If you did not ask for it, you can ignore this email.</p>
+</div></body></html>`;
+  try {
+    await mailer().sendMail({
+      from: process.env.EMAIL_FROM || process.env.SMTP_USER,
+      replyTo: process.env.EMAIL_REPLY_TO || undefined,
+      to,
+      subject: "Reset your Vozeen password",
+      text,
+      html,
+    });
+    return true;
+  } catch (error) {
+    console.error(
+      "Password reset email failed:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return false;
+  }
+}

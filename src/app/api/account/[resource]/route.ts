@@ -3,7 +3,8 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { addressSchema } from "@/lib/validation";
-import { apiError, HttpError, sameOrigin } from "@/lib/security";
+import { compare, hash } from "bcryptjs";
+import { apiError, HttpError, rateLimit, sameOrigin } from "@/lib/security";
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ resource: string }> },
@@ -20,6 +21,23 @@ export async function POST(
       return NextResponse.json(
         await db.address.create({ data: { ...address, userId: user.id } }),
       );
+    }
+    if (resource === "password") {
+      await rateLimit(`password:${user.id}`, 5);
+      const input = z
+        .object({
+          current: z.string().min(1).max(128),
+          next: z.string().min(12, "Use at least 12 characters").max(128),
+        })
+        .parse(body);
+      const row = await db.user.findUnique({ where: { id: user.id } });
+      if (!row || !(await compare(input.current, row.passwordHash)))
+        throw new HttpError(400, "Your current password is not correct.");
+      await db.user.update({
+        where: { id: user.id },
+        data: { passwordHash: await hash(input.next, 12) },
+      });
+      return NextResponse.json({ ok: true });
     }
     if (resource === "wishlist") {
       const { productId } = z.object({ productId: z.string() }).parse(body);
