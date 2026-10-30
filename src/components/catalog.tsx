@@ -38,7 +38,7 @@ export function Catalog({
   const [sort, setSort] = useState(initialSort);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
-  const [cols, setCols] = useState<"large" | "mid" | "small">("mid");
+  const [cols, setCols] = useState<"large" | "mid" | "small">("small");
   const router = useRouter();
   const active =
     [category, size, color, fabric, pieceType, work].filter(Boolean).length +

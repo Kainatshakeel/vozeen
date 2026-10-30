@@ -3615,3 +3615,50 @@ a.small-note {
   letter-spacing: 0.02em;
   text-transform: none;
 }
+
+/* Collection polish: six-up default, quiet hover-only wishlist heart */
+.shop-page .product-image {
+  background: #e9e8e6;
+}
+@media (hover: hover) {
+  .shop-page .wish-button {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity 0.25s,
+      transform 0.25s,
+      background 0.2s,
+      color 0.2s;
+  }
+  .shop-page .product-card:hover .wish-button,
+  .shop-page .wish-button:focus-visible,
+  .shop-page .wish-button.saved {
+    opacity: 1;
+    transform: none;
+  }
+}
+.shop-page .wish-button {
+  width: 34px;
+  height: 34px;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.92);
+}
+.shop-page .catalog-layout .product-grid {
+  gap: 36px 12px;
+}
+.shop-page .catalog-toolbar > p {
+  text-align: center;
+}
+@media (max-width: 860px) {
+  .shop-page .wish-button {
+    width: 30px;
+    height: 30px;
+    top: 6px;
+    right: 6px;
+  }
+  .shop-page .catalog-toolbar > p {
+    width: 100%;
+    text-align: center;
+  }
+}
