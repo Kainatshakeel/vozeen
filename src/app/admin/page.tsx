@@ -8,6 +8,8 @@ import {
   CouponManager,
   OrderStatus,
 } from "@/components/admin-manager";
+import { HomeImagesManager } from "@/components/home-images-admin";
+import { getHomeSlots } from "@/lib/home-images";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Studio dashboard",
@@ -85,7 +87,7 @@ export default async function Admin({
         <p>An overview of your store.</p>
       </div>
       <nav className="account-tabs">
-        {["overview", "products", "orders", "customers", "coupons"].map((t) => (
+        {["overview", "products", "orders", "customers", "coupons", "homepage"].map((t) => (
           <Link
             key={t}
             href={`/admin?tab=${t}`}
@@ -174,6 +176,9 @@ export default async function Admin({
             Revenue includes paid orders only.
           </p>
         </>
+      )}
+      {tab === "homepage" && (
+        <HomeImagesManager slots={await getHomeSlots()} />
       )}
       {tab === "products" && (
         <ProductManager

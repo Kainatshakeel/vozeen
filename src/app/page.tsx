@@ -9,13 +9,16 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getProducts } from "@/lib/catalog";
-import { homeImages } from "@/lib/home-images";
+import { getHomeImages } from "@/lib/home-images";
 import { ProductCard } from "@/components/product-card";
 import { HeroSlides } from "@/components/hero-slides";
 import { ProductCarousel } from "@/components/product-carousel";
 export const dynamic = "force-dynamic";
 export default async function Home() {
-  const products = await getProducts();
+  const [products, homeImages] = await Promise.all([
+    getProducts(),
+    getHomeImages(),
+  ]);
   const formals = products.filter((p) => p.category === "Formals");
   const women = products.filter((p) => p.category === "Women");
   const sale = products.filter((p) => p.compareAt);

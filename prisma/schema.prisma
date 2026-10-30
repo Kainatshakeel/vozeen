@@ -114,6 +114,11 @@ model Upload {
   size Int
   createdAt DateTime @default(now())
 }
+model SiteImage {
+  slot String @id
+  url String
+  updatedAt DateTime @default(now()) @updatedAt
+}
 model RateLimit {
   key String @id
   count Int

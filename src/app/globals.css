@@ -3662,3 +3662,48 @@ a.small-note {
     text-align: center;
   }
 }
+
+/* Admin: homepage photos */
+.home-admin h2 {
+  font-size: 22px;
+  margin: 36px 0 16px;
+}
+.home-admin-message {
+  padding: 12px 16px;
+  background: var(--surface);
+  border-left: 3px solid var(--ink);
+}
+.home-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.home-admin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+.home-admin-card img {
+  width: 100%;
+  aspect-ratio: 0.8;
+  object-fit: cover;
+  background: var(--surface);
+}
+.home-admin-card strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+.home-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.home-admin-actions .button {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 12px;
+  cursor: pointer;
+}
