@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Instagram, MessageCircle } from "lucide-react";
 export function Footer() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const phone = "+923071715876";
   return (
     <>
       <footer>
