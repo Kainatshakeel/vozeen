@@ -2106,7 +2106,11 @@ a.small-note {
   letter-spacing: var(--track-wide);
 }
 .loading {
-  min-height: 50vh;
+  /* Cover the page (incl. footer) while a route loads so it never flashes. */
+  position: fixed;
+  inset: var(--header-h) 0 0 0;
+  z-index: 5;
+  background: var(--cream);
   display: grid;
   place-items: center;
   font-size: 20px;
