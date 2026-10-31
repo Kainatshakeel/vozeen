@@ -23,8 +23,6 @@ export function Footer() {
             <h4>Explore</h4>
             <Link href="/shop">Shop all</Link>
             <Link href="/shop?category=Women">Women</Link>
-            <Link href="/men">Men (coming soon)</Link>
-            <Link href="/kids">Kids (coming soon)</Link>
             <Link href="/about">Our story</Link>
           </div>
           <div>

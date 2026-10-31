@@ -38,8 +38,6 @@ export function Header() {
               ["/", "Home"],
               ["/shop", "Shop all"],
               ["/shop?category=Women", "Women"],
-              ["/men", "Men"],
-              ["/kids", "Kids"],
               ["/shop?sort=new", "New arrivals"],
               ["/about", "Our story"],
             ].map(([href, label]) => (

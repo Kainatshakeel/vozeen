@@ -111,8 +111,6 @@ export default async function Home() {
           {[
             ["Women", "Lawn, chikankari & pret", homeImages.categoryWomen, ""],
             ["Formals", "Bridal, festive & wedding wear", homeImages.categoryFormals, ""],
-            ["Men", "Kurta shalwar & kameez", homeImages.categoryMen, "soon"],
-            ["Kids", "Little ones, big occasions", homeImages.categoryKids, "soon"],
           ].map(([name, caption, src, soon]) => (
             <Link
               className={soon ? "category-card is-soon" : "category-card"}
